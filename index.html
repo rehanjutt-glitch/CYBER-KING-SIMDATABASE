@@ -96,7 +96,7 @@ body::after {
 .input-box { display: flex; gap: 10px; }
 .input-box input {
   flex: 1; padding: 13px; border-radius: 10px;
-  border: 1px solid #000080;
+  border: 1px solid #5a0000;
   background: #120000; color: #fff; font-size: 14px; outline: none;
 }
 .input-box input:focus { border-color: #000080; box-shadow: 0 0 12px rgba(255,0,0,0.4); }
@@ -108,20 +108,20 @@ body::after {
   border: none; padding: 13px 20px;
   border-radius: 12px; font-weight: 800; font-size: 14px;
   cursor: pointer; letter-spacing: 1px;
-  box-shadow: 0 4px 0 #000080, 0 0 20px rgba(255,0,0,0.3);
+  box-shadow: 0 4px 0 #4a0000, 0 0 20px rgba(255,0,0,0.3);
   transition: 0.2s; text-transform: uppercase;
 }
 .btn:hover { filter: brightness(1.2); }
-.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #008081; }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #4a0000; }
 
 /* ═══ LOADER ═══ */
 .loader {
   display: none; text-align: center; padding: 25px;
-  color: #008081; font-weight: 700;
+  color: #ff4444; font-weight: 700;
 }
 .spinner {
   width: 36px; height: 36px;
-  border: 3px solid #008081;
+  border: 3px solid #3a0000;
   border-top: 3px solid #000080;
   border-radius: 50%;
   margin: 0 auto 12px;
@@ -133,7 +133,7 @@ body::after {
 .result { margin-top: 15px; }
 .item {
   background: #140000;
-  border: 1px solid #008081;
+  border: 1px solid #6a0000;
   border-left: 4px solid #000080;
   padding: 12px 14px;
   border-radius: 10px;
@@ -141,13 +141,13 @@ body::after {
   box-shadow: 0 0 15px rgba(255,0,0,0.1);
   animation: fade 0.4s ease;
 }
-.item .label { font-size: 11px; color: #008081; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+.item .label { font-size: 11px; color: #ff6666; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
 .item .value { font-size: 14px; font-weight: 700; color: #fff; word-break: break-all; }
-.item .value.highlight { color: #000080; }
+.item .value.highlight { color: #ff4444; }
 
 .no-data {
-  text-align: center; color: #008081; font-weight: 800;
-  padding: 25px; border: 1px dashed #000080; border-radius: 10px;
+  text-align: center; color: #ff4444; font-weight: 800;
+  padding: 25px; border: 1px dashed #5a0000; border-radius: 10px;
   background: rgba(255,0,0,0.05); letter-spacing: 1px;
 }
 
