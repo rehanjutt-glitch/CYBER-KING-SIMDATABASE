@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>𓆩 𝛭𝑅 𝑅𝛯𝛨𝛥𝜨 𓆪 | SIM Database + Live API</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+  body {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    min-height: 100vh; color: #eee; padding: 20px;
+  }
+  .header { text-align: center; padding: 20px 0; margin-bottom: 20px; }
+  .header h1 {
+    font-size: 26px; letter-spacing: 1px;
+    background: linear-gradient(90deg, #00d2ff, #3a7bd5, #f953c6);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .header p { color: #aaa; margin-top: 5px; font-size: 14px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px; padding: 20px; margin-bottom: 20px;
+    backdrop-filter: blur(6px);
+  }
+  .card h2 { font-size: 17px; margin-bottom: 15px; color: #00d2ff; }
+
+  .form-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .form-grid input, .form-grid select {
+    width: 100%; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.35);
+    color: #fff; font-size: 14px; outline: none;
+  }
+  .form-grid input:focus, .form-grid select:focus { border-color: #00d2ff; }
+  .form-grid label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; }
+
+  .btn {
+    padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer;
+    font-size: 14px; font-weight: 600; transition: 0.2s;
+  }
+  .btn-primary { background: #00d2ff; color: #000; }
+  .btn-primary:hover { background: #00b8e6; }
+  .btn-green { background: #2ecc71; color: #000; }
+  .btn-green:hover { background: #27ae60; }
+  .btn-red { background: #e74c3c; color: #fff; }
+  .btn-red:hover { background: #c0392b; }
+  .btn-orange { background: #f39c12; color: #000; }
+  .btn-orange:hover { background: #e67e22; }
+  .btn-purple { background: #9b59b6; color: #fff; }
+  .btn-purple:hover { background: #8e44ad; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .toolbar input {
+    flex: 1; min-width: 200px; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.35);
+    color: #fff; font-size: 14px; outline: none;
+  }
+  .toolbar input:focus { border-color: #00d2ff; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  th, td { padding: 10px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  th { color: #00d2ff; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
+  tr:hover { background: rgba(255,255,255,0.05); }
+  .status-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .active { background: rgba(46,204,113,0.2); color: #2ecc71; }
+  .inactive { background: rgba(231,76,60,0.2); color: #e74c3c; }
+  .pending { background: rgba(243,156,18,0.2); color: #f39c12; }
+  .action-btn { padding: 4px 10px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; margin-right: 4px; }
+  .edit-btn { background: #3498db; color: #fff; }
+  .del-btn { background: #e74c3c; color: #fff; }
+  .save-btn { background: #2ecc71; color: #fff; }
+  .empty-msg { text-align: center; padding: 30px; color: #888; font-size: 15px; }
+  .stats { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+  .stat-box {
+    flex: 1; min-width: 130px; background: rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 12px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .stat-box .num { font-size: 24px; font-weight: 700; color: #00d2ff; }
+  .stat-box .lbl { font-size: 12px; color: #aaa; margin-top: 4px; }
+
+  /* Live API Lookup styles */
+  .api-search { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .api-search input {
+    flex: 1; min-width: 220px; padding: 12px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.35);
+    color: #fff; font-size: 14px; outline: none;
+  }
+  .api-search input:focus { border-color: #f953c6; }
+  .api-results { margin-top: 15px; display: grid; gap: 12px; }
+  .api-card {
+    background: rgba(0,0,0,0.35); border: 1px solid rgba(0,210,255,0.25);
+    border-radius: 10px; padding: 14px; position: relative;
+    animation: fadeIn 0.4s ease;
+  }
+  .api-card .row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); font-size: 13px; }
+  .api-card .row:last-of-type { border: none; }
+  .api-card .lbl { color: #aaa; }
+  .api-card .val { color: #fff; font-weight: 600; text-align: right; word-break: break-all; }
+  .api-card .save-btn { position: absolute; top: 10px; right: 10px; }
+  .api-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 12px;
+    background: rgba(0,210,255,0.15); color: #00d2ff;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px;
+  }
+  .loader {
+    display: none; text-align: center; padding: 25px; color: #00d2ff;
+  }
+  .spinner {
+    width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.15);
+    border-top: 3px solid #00d2ff; border-radius: 50%;
+    margin: 0 auto 10px; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .no-data { text-align: center; padding: 20px; color: #e74c3c; font-weight: 600; }
+
+  #toast {
+    position: fixed; bottom: 20px; right: 20px; background: #2ecc71; color: #000;
+    padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px;
+    opacity: 0; transition: 0.3s; pointer-events: none; z-index: 999;
+  }
+  #toast.show { opacity: 1; }
+  #toast.error { background: #e74c3c; color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>𓆩 𝛭𝑅 𝑅𝛯𝛨𝛥𝜨 𓆪</h1>
+    <p>SIM Database Management System + Live API Lookup — v2.0</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-box"><div class="num" id="statTotal">0</div><div class="lbl">Total SIMs</div></div>
+    <div class="stat-box"><div class="num" id="statActive">0</div><div class="lbl">Active</div></div>
+    <div class="stat-box"><div class="num" id="statInactive">0</div><div class="lbl">Inactive</div></div>
+    <div class="stat-box"><div class="num" id="statPending">0</div><div class="lbl">Pending</div></div>
+  </div>
+
+  <!-- ═══════════ LIVE API LOOKUP (NEW) ═══════════ -->
+  <div class="card">
+    <h2>⚡ Live API Lookup — famofc.site</h2>
+    <div class="api-search">
+      <input type="text" id="apiQuery" placeholder="Enter Phone (03XXXXXXXXX) ya CNIC (XXXXX-XXXXXXX-X)..." onkeydown="if(event.key==='Enter')apiSearch()">
+      <button class="btn btn-purple" onclick="apiSearch()">🔍 Search API</button>
+      <button class="btn btn-primary" onclick="saveAllApiResults()">💾 Save All Results</button>
+    </div>
+    <div class="loader" id="apiLoader">
+      <div class="spinner"></div>
+      <p>Searching live database...</p>
+    </div>
+    <div class="api-results" id="apiResults"></div>
+  </div>
+
+  <!-- Add / Edit Form -->
+  <div class="card">
+    <h2 id="formTitle">➕ New SIM Entry</h2>
+    <div class="form-grid">
+      <div>
+        <label>Phone Number *</label>
+        <input type="text" id="phone" placeholder="0300-1234567">
+      </div>
+      <div>
+        <label>SIM Serial (ICCID)</label>
+        <input type="text" id="iccid" placeholder="8960301234567890123">
+      </div>
+      <div>
+        <label>Operator</label>
+        <select id="operator">
+          <option value="">-- Select --</option>
+          <option>Jazz</option>
+          <option>Zong</option>
+          <option>Telenor</option>
+          <option>Ufone</option>
+          <option>Warid</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label>IMEI</label>
+        <input type="text" id="imei" placeholder="IMEI number">
+      </div>
+      <div>
+        <label>Owner Name</label>
+        <input type="text" id="owner" placeholder="Full name">
+      </div>
+      <div>
+        <label>CNIC / NIC</label>
+        <input type="text" id="cnic" placeholder="42101-1234567-8">
+      </div>
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+          <option value="Pending">Pending</option>
+        </select>
+      </div>
+      <div>
+        <label>Purchase Date</label>
+        <input type="date" id="pdate">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveRecord()">💾 Save SIM</button>
+      <button class="btn btn-orange" onclick="resetForm()">🔄 Clear Form</button>
+    </div>
+  </div>
+
+  <!-- List / Search -->
+  <div class="card">
+    <h2>📋 SIM Records</h2>
+    <div class="toolbar">
+      <input type="text" id="searchBox" placeholder="🔍 Search by number, owner, CNIC, operator..." oninput="renderTable()">
+      <button class="btn btn-green" onclick="exportData()">⬇ Export JSON</button>
+      <button class="btn btn-primary" onclick="document.getElementById('importFile').click()">⬆ Import JSON</button>
+      <button class="btn btn-red" onclick="deleteAll()">🗑 Delete All</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Number</th><th>Operator</th><th>Owner</th>
+          <th>CNIC</th><th>IMEI</th><th>Status</th><th>Date</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div id="emptyMsg" class="empty-msg" style="display:none;">No records found. Add your first SIM entry above. 📱</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════ CONFIG ═══════════════
+const API = "https://famofc.site/api/database.php";   // Live lookup API
+let lastApiRecords = [];                              // API se aaye huye records (save-all ke liye)
+
+const STORAGE_KEY = 'sim_database_v1';
+let records = [];
+let editId = null;
+
+// ───────────── Local DB Functions ─────────────
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    records = raw ? JSON.parse(raw) : [];
+  } catch(e) { records = []; }
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = isError ? 'show error' : 'show';
+  setTimeout(() => { t.className = ''; }, 2200);
+}
+
+// ───────────── LIVE API LOOKUP (NEW) ─────────────
+async function apiSearch() {
+  let q = document.getElementById('apiQuery').value.trim();
+  if (!q) { showToast('⚠ Pehle number ya CNIC likho!', true); return; }
+
+  const loader = document.getElementById('apiLoader');
+  const resArea = document.getElementById('apiResults');
+  loader.style.display = 'block';
+  resArea.innerHTML = '';
+
+  try {
+    const res = await fetch(`${API}?q=${encodeURIComponent(q)}`);
+    const data = await res.json();
+
+    if (!data.success || !data.data || !data.data.records || data.data.records.length === 0) {
+      throw new Error('no data');
+    }
+
+    lastApiRecords = data.data.records;
+    resArea.innerHTML = '';
+
+    lastApiRecords.forEach((r, i) => {
+      const card = document.createElement('div');
+      card.className = 'api-card';
+      card.innerHTML = `
+        <span class="api-badge">LIVE RESULT #${i + 1}</span>
+        <button class="btn save-btn" onclick="saveApiRecord(${i})">💾 Save</button>
+        <div class="row"><span class="lbl">👤 Name</span><span class="val">${escapeHtml(r.full_name || 'N/A')}</span></div>
+        <div class="row"><span class="lbl">📱 Phone</span><span class="val">${escapeHtml(r.phone || 'N/A')}</span></div>
+        <div class="row"><span class="lbl">🪪 CNIC</span><span class="val">${escapeHtml(r.cnic || 'N/A')}</span></div>
+        <div class="row"><span class="lbl">📍 Address</span><span class="val">${escapeHtml(r.address || 'N/A')}</span></div>
+      `;
+      resArea.appendChild(card);
+    });
+
+  } catch (e) {
+    resArea.innerHTML = '<div class="no-data">❌ No Data Found — koi aur number/CNIC try karo</div>';
+  }
+
+  loader.style.display = 'none';
+}
+
+// Eik record ko local database mein save karo
+function saveApiRecord(idx) {
+  const r = lastApiRecords[idx];
+  if (!r) return;
+
+  const phone = String(r.phone || '').replace(/\D/g, '');
+  if (!phone) { showToast('⚠ API se phone number nahi mila!', true); return; }
+
+  // Duplicate check — same phone already hai?
+  const dup = records.find(x => String(x.phone).replace(/\D/g, '') === phone);
+  if (dup) { showToast('⚠ Ye number pehle se database mein hai!', true); return; }
+
+  const rec = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    phone: phone,
+    iccid: '',
+    operator: 'Other',
+    imei: '',
+    owner: r.full_name || '',
+    cnic: r.cnic || '',
+    status: 'Active',
+    pdate: '',
+    created: new Date().toISOString(),
+    source: 'API-live'
+  };
+
+  records.unshift(rec);
+  saveData();
+  renderTable();
+  updateStats();
+  showToast('✅ Live record database mein save ho gaya!');
+}
+
+// Saare API results ek saath save karo
+function saveAllApiResults() {
+  if (!lastApiRecords.length) { showToast('⚠ Pehle API search karo!', true); return; }
+  let saved = 0, skipped = 0;
+
+  lastApiRecords.forEach(r => {
+    const phone = String(r.phone || '').replace(/\D/g, '');
+    if (!phone) { skipped++; return; }
+    const dup = records.find(x => String(x.phone).replace(/\D/g, '') === phone);
+    if (dup) { skipped++; return; }
+
+    records.unshift({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+      phone: phone,
+      iccid: '', operator: 'Other', imei: '',
+      owner: r.full_name || '', cnic: r.cnic || '',
+      status: 'Active', pdate: '',
+      created: new Date().toISOString(), source: 'API-live'
+    });
+    saved++;
+  });
+
+  saveData();
+  renderTable();
+  updateStats();
+  showToast('✅ ' + saved + ' saved, ' + skipped + ' skipped (duplicate/missing phone)');
+}
+
+// ───────────── CRUD Functions ─────────────
+function saveRecord() {
+  const phone = document.getElementById('phone').value.trim();
+  if (!phone) { showToast('⚠ Phone number zaroori hai!', true); return; }
+
+  const rec = {
+    id: editId || Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    phone: phone,
+    iccid: document.getElementById('iccid').value.trim(),
+    operator: document.getElementById('operator').value,
+    imei: document.getElementById('imei').value.trim(),
+    owner: document.getElementById('owner').value.trim(),
+    cnic: document.getElementById('cnic').value.trim(),
+    status: document.getElementById('status').value,
+    pdate: document.getElementById('pdate').value,
+    created: new Date().toISOString()
+  };
+
+  if (editId) {
+    const i = records.findIndex(r => r.id === editId);
+    if (i !== -1) { rec.created = records[i].created; records[i] = rec; }
+    showToast('✅ Record update ho gaya!');
+    editId = null;
+  } else {
+    records.unshift(rec);
+    showToast('✅ SIM record add ho gaya!');
+  }
+
+  saveData();
+  resetForm();
+  renderTable();
+}
+
+function resetForm() {
+  editId = null;
+  document.getElementById('formTitle').textContent = '➕ New SIM Entry';
+  ['phone','iccid','imei','owner','cnic','pdate'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('operator').value = '';
+  document.getElementById('status').value = 'Active';
+}
+
+function editRecord(id) {
+  const r = records.find(x => x.id === id);
+  if (!r) return;
+  editId = id;
+  document.getElementById('formTitle').textContent = '✏️ Edit SIM Entry (ID: ' + id.slice(0,6) + ')';
+  document.getElementById('phone').value = r.phone;
+  document.getElementById('iccid').value = r.iccid || '';
+  document.getElementById('operator').value = r.operator || '';
+  document.getElementById('imei').value = r.imei || '';
+  document.getElementById('owner').value = r.owner || '';
+  document.getElementById('cnic').value = r.cnic || '';
+  document.getElementById('status').value = r.status || 'Active';
+  document.getElementById('pdate').value = r.pdate || '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function deleteRecord(id) {
+  if (!confirm('Is record ko delete karna hai?')) return;
+  records = records.filter(r => r.id !== id);
+  saveData(); renderTable();
+  showToast('🗑 Record delete ho gaya!');
+}
+
+function deleteAll() {
+  if (records.length === 0) { showToast('Kuch delete karne ko nahi hai.', true); return; }
+  if (!confirm('⚠ SARE records delete ho jayenge! Confirm?')) return;
+  if (!confirm('Pakka? Ye wapas nahi aa sakta!')) return;
+  records = [];
+  saveData(); renderTable();
+  showToast('🗑 Saare records delete ho gaye!');
+}
+
+function renderTable() {
+  const q = document.getElementById('searchBox').value.trim().toLowerCase();
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  let filtered = records.filter(r => {
+    if (!q) return true;
+    return [r.phone, r.owner, r.cnic, r.operator, r.imei, r.iccid, r.status]
+      .join(' ').toLowerCase().includes(q);
+  });
+
+  document.getElementById('emptyMsg').style.display = filtered.length === 0 ? 'block' : 'none';
+
+  filtered.forEach((r, idx) => {
+    const badgeClass = (r.status || '').toLowerCase();
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${idx + 1}</td>
+      <td><b>${escapeHtml(r.phone)}</b>${r.source === 'API-live' ? ' <span style="color:#9b59b6;font-size:10px">⚡API</span>' : ''}</td>
+      <td>${escapeHtml(r.operator || '-')}</td>
+      <td>${escapeHtml(r.owner || '-')}</td>
+      <td>${escapeHtml(r.cnic || '-')}</td>
+      <td>${escapeHtml(r.imei || '-')}</td>
+      <td><span class="status-badge ${badgeClass}">${escapeHtml(r.status || '-')}</span></td>
+      <td>${escapeHtml(r.pdate || '-')}</td>
+      <td>
+        <button class="action-btn edit-btn" onclick="editRecord('${r.id}')">✏ Edit</button>
+        <button class="action-btn del-btn" onclick="deleteRecord('${r.id}')">🗑</button>
+      </td>`;
+    tbody.appendChild(row);
+  });
+
+  updateStats();
+}
+
+function updateStats() {
+  const total = records.length;
+  const active = records.filter(r => r.status === 'Active').length;
+  const inactive = records.filter(r => r.status === 'Inactive').length;
+  const pending = records.filter(r => r.status === 'Pending').length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statActive').textContent = active;
+  document.getElementById('statInactive').textContent = inactive;
+  document.getElementById('statPending').textContent = pending;
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+function exportData() {
+  if (records.length === 0) { showToast('Export karne ke liye koi data nahi.', true); return; }
+  const blob = new Blob([JSON.stringify(records, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'SIM_Database_Backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('⬇ Backup file download ho gayi!');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error('Invalid format');
+      if (!confirm(data.length + ' records import karne hain? Existing data merge ho jayega.')) return;
+      data.forEach(r => {
+        if (r && r.phone) {
+          if (!records.find(x => x.id === r.id)) records.push(r);
+        }
+      });
+      saveData(); renderTable();
+      showToast('✅ Import complete! Total: ' + records.length);
+    } catch(err) {
+      showToast('❌ Invalid JSON file!', true);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// Print report (Ctrl+P se print kar sakte hain)
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key.toLowerCase() === 'p') { e.preventDefault(); window.print(); }
+});
+
+// Init
+loadData();
+renderTable();
+</script>
+</body>
+</html>
