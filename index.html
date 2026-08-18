@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>𓆩 KILLER SIM DATABASE 𓆪 | Pro Checker</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+
+body {
+  background: #0d0000;
+  color: #eee;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ═══ FALLING MONEY RAIN (Canvas) ═══ */
+#rain {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1; pointer-events: none;
+}
+
+/* ═══ RED HACKING THEME ═══ */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background: radial-gradient(circle at 50% 0%, #3a0000 0%, #0d0000 60%);
+  z-index: 0;
+}
+body::after {
+  content: "";
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.25) 3px
+  );
+  z-index: 2; pointer-events: none;  /* CRT scanline effect */
+}
+
+.container {
+  position: relative; z-index: 3;
+  max-width: 480px; margin: auto; padding: 20px 15px 40px;
+}
+
+/* ═══ HEADER ═══ */
+.header {
+  background: linear-gradient(135deg, #8b0000, #ff0000);
+  padding: 25px 15px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(255,0,0,0.4);
+  animation: fade 1s ease;
+}
+.header h1 {
+  font-size: 24px; letter-spacing: 2px; color: #fff;
+  text-shadow: 0 0 15px rgba(255,0,0,0.8), 0 0 30px rgba(255,0,0,0.5);
+  font-weight: 800;
+}
+.header .bismillah { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #ffe; }
+.header .welcome { font-size: 13px; opacity: 0.9; color: #ffd; }
+
+/* ═══ MAIN CARD ═══ */
+.card {
+  background: rgba(20, 0, 0, 0.85);
+  border: 1px solid #ff2222;
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: -15px;
+  box-shadow: 0 10px 40px rgba(255,0,0,0.25), inset 0 0 30px rgba(255,0,0,0.05);
+  animation: fade 0.6s ease;
+}
+
+.toggle {
+  display: flex;
+  background: #1a0000;
+  border: 1px solid #4a0000;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 15px;
+}
+.toggle button {
+  flex: 1; padding: 10px;
+  border: none; background: none;
+  color: #ff7777; border-radius: 8px;
+  cursor: pointer; font-weight: 700; font-size: 14px;
+  transition: 0.3s;
+}
+.toggle button.active {
+  background: linear-gradient(145deg, #ff0000, #8b0000);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(255,0,0,0.6);
+}
+
+.input-box { display: flex; gap: 10px; }
+.input-box input {
+  flex: 1; padding: 13px; border-radius: 10px;
+  border: 1px solid #5a0000;
+  background: #120000; color: #fff; font-size: 14px; outline: none;
+}
+.input-box input:focus { border-color: #ff0000; box-shadow: 0 0 12px rgba(255,0,0,0.4); }
+.input-box input::placeholder { color: #883333; }
+
+.btn {
+  background: linear-gradient(145deg, #ff0000, #8b0000);
+  color: #fff;
+  border: none; padding: 13px 20px;
+  border-radius: 12px; font-weight: 800; font-size: 14px;
+  cursor: pointer; letter-spacing: 1px;
+  box-shadow: 0 4px 0 #4a0000, 0 0 20px rgba(255,0,0,0.3);
+  transition: 0.2s; text-transform: uppercase;
+}
+.btn:hover { filter: brightness(1.2); }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #4a0000; }
+
+/* ═══ LOADER ═══ */
+.loader {
+  display: none; text-align: center; padding: 25px;
+  color: #ff4444; font-weight: 700;
+}
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #3a0000;
+  border-top: 3px solid #ff0000;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ RESULTS ═══ */
+.result { margin-top: 15px; }
+.item {
+  background: #140000;
+  border: 1px solid #6a0000;
+  border-left: 4px solid #ff0000;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 0 15px rgba(255,0,0,0.1);
+  animation: fade 0.4s ease;
+}
+.item .label { font-size: 11px; color: #ff6666; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+.item .value { font-size: 14px; font-weight: 700; color: #fff; word-break: break-all; }
+.item .value.highlight { color: #ff4444; }
+
+.no-data {
+  text-align: center; color: #ff4444; font-weight: 800;
+  padding: 25px; border: 1px dashed #5a0000; border-radius: 10px;
+  background: rgba(255,0,0,0.05); letter-spacing: 1px;
+}
+
+.credit {
+  text-align: center; margin-top: 20px;
+  font-size: 11px; color: #883333;
+  text-shadow: 0 0 8px rgba(255,0,0,0.4);
+}
+
+@keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══════════ JOIN CHANNEL POPUP ═══════════ */
+.popup-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.popup-overlay.show { display: flex; }
+
+.popup-box {
+  background: linear-gradient(145deg, #1a0000, #0d0000);
+  border: 2px solid #ff0000;
+  border-radius: 18px;
+  padding: 30px 25px;
+  text-align: center;
+  max-width: 360px; width: 100%;
+  box-shadow: 0 0 50px rgba(255,0,0,0.5), inset 0 0 30px rgba(255,0,0,0.1);
+  animation: popIn 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+.popup-box::before {
+  content: "";
+  position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(255,0,0,0.08) 90deg, transparent 180deg);
+  animation: rotate 6s linear infinite;
+  pointer-events: none;
+}
+@keyframes rotate { to { transform: rotate(360deg); } }
+
+.popup-box .popup-icon {
+  font-size: 55px; margin-bottom: 12px;
+  display: block;
+  filter: drop-shadow(0 0 15px rgba(255,0,0,0.8));
+}
+.popup-box h2 {
+  color: #ff0000; font-size: 22px; letter-spacing: 2px;
+  text-shadow: 0 0 15px rgba(255,0,0,0.8);
+  margin-bottom: 8px; font-weight: 800;
+  text-transform: uppercase;
+}
+.popup-box p {
+  color: #ff8888; font-size: 13px; margin-bottom: 20px;
+}
+
+.popup-btn {
+  display: block; width: 100%;
+  padding: 14px; border: none; border-radius: 12px;
+  font-size: 15px; font-weight: 800; cursor: pointer;
+  letter-spacing: 1px; transition: 0.2s;
+  text-transform: uppercase;
+}
+.popup-btn.join {
+  background: linear-gradient(145deg, #25D366, #128C7E);
+  color: #fff;
+  box-shadow: 0 4px 0 #0a5c3f, 0 0 25px rgba(37,211,102,0.4);
+  margin-bottom: 12px;
+}
+.popup-btn.join:hover { filter: brightness(1.15); }
+.popup-btn.join:active { transform: translateY(3px); box-shadow: 0 1px 0 #0a5c3f; }
+
+.popup-btn.later {
+  background: transparent;
+  color: #ff5555;
+  border: 1px solid #6a0000;
+}
+.popup-btn.later:hover { background: rgba(255,0,0,0.1); }
+
+.popup-hint {
+  margin-top: 15px; font-size: 10px; color: #662222;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ MONEY RAIN CANVAS ═══════════ -->
+<canvas id="rain"></canvas>
+
+<!-- ═══════════ JOIN CHANNEL POPUP ═══════════ -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <span class="popup-icon">💀</span>
+    <h2>Join Channel</h2>
+    <p>Latest tools, updates aur exclusive content ke liye<br>hamara WhatsApp Channel join karo! 🔥</p>
+    <button class="popup-btn join" onclick="joinChannel()">📢 JOIN CHANNEL</button>
+    <button class="popup-btn later" onclick="maybeLater()">Maybe Later</button>
+    <div class="popup-hint">Popup ek baar dikhta hai — next visit par nahi aayega</div>
+  </div>
+</div>
+
+<!-- ═══════════ MAIN APP ═══════════ -->
+<div class="container">
+  <div class="header">
+    <div class="bismillah">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+    <h1>𓆩 KILLER SIM DATABASE 𓆪</h1>
+    <div class="welcome">Welcome! Fast &amp; Secure Database Checker</div>
+  </div>
+
+  <div class="card">
+    <div class="toggle">
+      <button class="active" id="btnPhone" onclick="setType('phone')">📱 Phone</button>
+      <button id="btnCnic" onclick="setType('cnic')">🪪 CNIC</button>
+    </div>
+
+    <div class="input-box">
+      <input type="text" id="input" placeholder="Enter 11 digit number..." autocomplete="off">
+      <button class="btn" onclick="search()">Search</button>
+    </div>
+
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+      <p>Searching database...</p>
+    </div>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <div class="credit">⚡ Developed By: KILLER KING ⚡</div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   🔧 CONFIG — YAHAN APNA WHATSAPP CHANNEL LINK LAGAO 🔧
+   Apna channel ka link neeche quotes (" ") ke andar paste karo.
+   Example: const CHANNEL_LINK = "https://whatsapp.com/channel/0029VaXXXXXX";
+   ═══════════════════════════════════════════════════════════ */
+const CHANNEL_LINK = "";   // ← APNA LINK YAHAN PASTE KARO
+
+/* ── API (same API jo upar wali site use karti hai) ── */
+const API = "https://famofc.site/api/database.php";
+
+let searchType = 'phone';
+
+/* ═══════════ JOIN CHANNEL POPUP LOGIC ═══════════ */
+function showPopup() {
+  // Agar user pehle hi join/close kar chuka hai to popup dobara nahi dikhega
+  if (localStorage.getItem('kk_channel_popup_done')) return;
+  document.getElementById('popup').classList.add('show');
+}
+
+function joinChannel() {
+  localStorage.setItem('kk_channel_popup_done', '1');
+  document.getElementById('popup').classList.remove('show');
+
+  if (CHANNEL_LINK) {
+    window.open(CHANNEL_LINK, '_blank');   // WhatsApp channel naye tab mein khulega
+  } else {
+    alert('⚠ Channel link abhi set nahi hua.\n\nCode ke top par CHANNEL_LINK mein apna WhatsApp channel link paste karo.');
+  }
+}
+
+function maybeLater() {
+  localStorage.setItem('kk_channel_popup_done', '1');
+  document.getElementById('popup').classList.remove('show');
+}
+
+/* ═══════════ SEARCH LOGIC ═══════════ */
+function setType(t) {
+  searchType = t;
+  document.getElementById('btnPhone').classList.toggle('active', t === 'phone');
+  document.getElementById('btnCnic').classList.toggle('active', t === 'cnic');
+  document.getElementById('input').placeholder = t === 'phone'
+    ? 'Enter 11 digit number...'
+    : 'Enter 13 digit CNIC (XXXXX-XXXXXXX-X)...';
+}
+
+async function search() {
+  let val = document.getElementById('input').value.trim();
+  if (!val) return alert('⚠ Pehle number ya CNIC likho!');
+
+  document.getElementById('loader').style.display = 'block';
+  document.getElementById('result').innerHTML = '';
+
+  try {
+    let res = await fetch(`${API}?q=${encodeURIComponent(val)}`);
+    let data = await res.json();
+
+    if (!data.success || !data.data || !data.data.records || data.data.records.length === 0) {
+      throw new Error('no data');
+    }
+
+    let html = '';
+    data.data.records.forEach((r, i) => {
+      html += `
+      <div class="item">
+        <div style="font-size:10px; color:#ff6666; letter-spacing:2px; margin-bottom:4px;">▓ RECORD #${i + 1} — VERIFIED ▓</div>
+        <div class="label">👤 Name</div>
+        <div class="value highlight">${escapeHtml(r.full_name || 'N/A')}</div>
+        <div class="label">📱 Phone</div>
+        <div class="value">${escapeHtml(r.phone || 'N/A')}</div>
+        <div class="label">🪪 CNIC</div>
+        <div class="value">${escapeHtml(r.cnic || 'N/A')}</div>
+        <div class="label">📍 Address</div>
+        <div class="value">${escapeHtml(r.address || 'N/A')}</div>
+      </div>`;
+    });
+
+    document.getElementById('result').innerHTML = html;
+
+  } catch (e) {
+    document.getElementById('result').innerHTML =
+      '<div class="no-data">❌ NO DATA FOUND<br><span style="font-size:11px; font-weight:400;">Koi aur number/CNIC try karo</span></div>';
+  }
+
+  document.getElementById('loader').style.display = 'none';
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+/* ═══════════ FALLING MONEY RAIN ═══════════ */
+const canvas = document.getElementById('rain');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const symbols = ['$', '₨', '€', '£', '¥', '₹', '$', '$'];
+const drops = [];
+const COUNT = 60;
+
+for (let i = 0; i < COUNT; i++) {
+  drops.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height - canvas.height,
+    speed: 1.5 + Math.random() * 3,
+    size: 16 + Math.random() * 22,
+    symbol: symbols[Math.floor(Math.random() * symbols.length)],
+    opacity: 0.3 + Math.random() * 0.7
+  });
+}
+
+function drawRain() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.textAlign = 'center';
+
+  drops.forEach(d => {
+    d.y += d.speed;
+    if (d.y > canvas.height + 50) {
+      d.y = -40;
+      d.x = Math.random() * canvas.width;
+    }
+
+    // Red glow effect
+    ctx.shadowColor = '#ff0000';
+    ctx.shadowBlur = 15;
+    ctx.font = `bold ${d.size}px monospace`;
+    ctx.fillStyle = `rgba(255, 60, 60, ${d.opacity})`;
+    ctx.fillText(d.symbol, d.x, d.y);
+    ctx.shadowBlur = 0;
+  });
+
+  requestAnimationFrame(drawRain);
+}
+drawRain();
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+/* ═══════════ ENTER KEY + INIT ═══════════ */
+document.getElementById('input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') search();
+});
+
+// Load par popup dikhao
+window.addEventListener('load', showPopup);
+</script>
+</body>
+</html>
