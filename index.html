@@ -15,7 +15,7 @@ body {
   position: relative;
 }
 
-/* ═══ FALLING DODE RAIN (Canvas) ═══ */
+/* ═══ FALLING CODE RAIN (Canvas) ═══ */
 #rain {
   position: fixed; top: 0; left: 0;
   width: 100%; height: 100%;
@@ -35,7 +35,7 @@ body::after {
   background: repeating-linear-gradient(
     0deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.25) 3px
   );
-  z-index: 2; pointer-events: none;  /* CRT scanline effect */
+  z-index: 2; pointer-events: none;
 }
 
 .container {
@@ -50,32 +50,32 @@ body::after {
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   text-align: center;
-  box-shadow: 0 0 40px rgba(255,0,0,0.4);
+  box-shadow: 0 0 40px rgba(0, 150, 255, 0.4);
   animation: fade 1s ease;
 }
 .header h1 {
   font-size: 24px; letter-spacing: 2px; color: #fff;
-  text-shadow: 0 0 15px rgba(255,0,0,0.8), 0 0 30px rgba(255,0,0,0.5);
+  text-shadow: 0 0 15px rgba(0, 150, 255, 0.8), 0 0 30px rgba(0, 120, 255, 0.5);
   font-weight: 800;
 }
 .header .bismillah { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #ffe; }
-.header .welcome { font-size: 13px; opacity: 0.9; color: #ffd; }
+.header .welcome { font-size: 13px; opacity: 0.9; color: #cfd; }
 
 /* ═══ MAIN CARD ═══ */
 .card {
-  background: rgba(20, 0, 0, 0.85);
-  border: 1px solid #000080;
+  background: rgba(0, 10, 30, 0.88);
+  border: 1px solid #003080;
   border-radius: 16px;
   padding: 18px;
   margin-top: -15px;
-  box-shadow: 0 10px 40px rgba(255,0,0,0.25), inset 0 0 30px rgba(255,0,0,0.05);
+  box-shadow: 0 10px 40px rgba(0, 100, 255, 0.25), inset 0 0 30px rgba(0, 100, 255, 0.06);
   animation: fade 0.6s ease;
 }
 
 .toggle {
   display: flex;
-  background: #000080;
-  border: 1px solid #008081;
+  background: #000060;
+  border: 1px solid #0080a0;
   border-radius: 10px;
   padding: 4px;
   margin-bottom: 15px;
@@ -83,24 +83,25 @@ body::after {
 .toggle button {
   flex: 1; padding: 10px;
   border: none; background: none;
-  color: #008081; border-radius: 8px;
+  color: #0080a0; border-radius: 8px;
   cursor: pointer; font-weight: 700; font-size: 14px;
   transition: 0.3s;
 }
 .toggle button.active {
   background: linear-gradient(145deg, #000080, #008081);
   color: #fff;
-  box-shadow: 0 0 15px rgba(255,0,0,0.6);
+  box-shadow: 0 0 15px rgba(0, 150, 255, 0.6);
 }
 
 .input-box { display: flex; gap: 10px; }
 .input-box input {
   flex: 1; padding: 13px; border-radius: 10px;
-  border: 1px solid #5a0000;
-  background: #120000; color: #fff; font-size: 14px; outline: none;
+  border: 1px solid #003060;
+  background: #000a18;
+  color: #fff; font-size: 14px; outline: none;
 }
-.input-box input:focus { border-color: #000080; box-shadow: 0 0 12px rgba(255,0,0,0.4); }
-.input-box input::placeholder { color: #883333; }
+.input-box input:focus { border-color: #0080ff; box-shadow: 0 0 12px rgba(0, 150, 255, 0.4); }
+.input-box input::placeholder { color: #336688; }
 
 .btn {
   background: linear-gradient(145deg, #000080, #008081);
@@ -108,21 +109,21 @@ body::after {
   border: none; padding: 13px 20px;
   border-radius: 12px; font-weight: 800; font-size: 14px;
   cursor: pointer; letter-spacing: 1px;
-  box-shadow: 0 4px 0 #4a0000, 0 0 20px rgba(255,0,0,0.3);
+  box-shadow: 0 4px 0 #002a5a, 0 0 20px rgba(0, 120, 255, 0.35);
   transition: 0.2s; text-transform: uppercase;
 }
 .btn:hover { filter: brightness(1.2); }
-.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #4a0000; }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #002a5a; }
 
 /* ═══ LOADER ═══ */
 .loader {
   display: none; text-align: center; padding: 25px;
-  color: #ff4444; font-weight: 700;
+  color: #00bbff; font-weight: 700;
 }
 .spinner {
   width: 36px; height: 36px;
-  border: 3px solid #3a0000;
-  border-top: 3px solid #000080;
+  border: 3px solid #002040;
+  border-top: 3px solid #0099ff;
   border-radius: 50%;
   margin: 0 auto 12px;
   animation: spin 0.8s linear infinite;
@@ -132,29 +133,29 @@ body::after {
 /* ═══ RESULTS ═══ */
 .result { margin-top: 15px; }
 .item {
-  background: #140000;
-  border: 1px solid #6a0000;
-  border-left: 4px solid #000080;
+  background: #000a20;
+  border: 1px solid #003060;
+  border-left: 4px solid #0080ff;
   padding: 12px 14px;
   border-radius: 10px;
   margin-bottom: 12px;
-  box-shadow: 0 0 15px rgba(255,0,0,0.1);
+  box-shadow: 0 0 15px rgba(0, 100, 255, 0.12);
   animation: fade 0.4s ease;
 }
-.item .label { font-size: 11px; color: #ff6666; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+.item .label { font-size: 11px; color: #44ccff; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
 .item .value { font-size: 14px; font-weight: 700; color: #fff; word-break: break-all; }
-.item .value.highlight { color: #ff4444; }
+.item .value.highlight { color: #00ddff; }
 
 .no-data {
-  text-align: center; color: #ff4444; font-weight: 800;
-  padding: 25px; border: 1px dashed #5a0000; border-radius: 10px;
-  background: rgba(255,0,0,0.05); letter-spacing: 1px;
+  text-align: center; color: #00aaff; font-weight: 800;
+  padding: 25px; border: 1px dashed #003060; border-radius: 10px;
+  background: rgba(0, 80, 255, 0.06); letter-spacing: 1px;
 }
 
 .credit {
   text-align: center; margin-top: 20px;
-  font-size: 11px; color: #883333;
-  text-shadow: 0 0 8px rgba(255,0,0,0.4);
+  font-size: 11px; color: #4488aa;
+  text-shadow: 0 0 8px rgba(0, 120, 255, 0.4);
 }
 
 @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -171,13 +172,13 @@ body::after {
 .popup-overlay.show { display: flex; }
 
 .popup-box {
-  background: linear-gradient(145deg, #1a0000, #000080);
-  border: 2px solid #000080;
+  background: linear-gradient(145deg, #000a20, #001040);
+  border: 2px solid #0040a0;
   border-radius: 18px;
   padding: 30px 25px;
   text-align: center;
   max-width: 360px; width: 100%;
-  box-shadow: 0 0 50px rgba(255,0,0,0.5), inset 0 0 30px rgba(255,0,0,0.1);
+  box-shadow: 0 0 50px rgba(0, 100, 255, 0.45), inset 0 0 30px rgba(0, 100, 255, 0.1);
   animation: popIn 0.4s ease;
   position: relative;
   overflow: hidden;
@@ -186,7 +187,7 @@ body::after {
   content: "";
   position: absolute; top: -50%; left: -50%;
   width: 200%; height: 200%;
-  background: conic-gradient(from 0deg, transparent 0deg, rgba(255,0,0,0.08) 90deg, transparent 180deg);
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(0, 150, 255, 0.08) 90deg, transparent 180deg);
   animation: rotate 6s linear infinite;
   pointer-events: none;
 }
@@ -195,16 +196,16 @@ body::after {
 .popup-box .popup-icon {
   font-size: 55px; margin-bottom: 12px;
   display: block;
-  filter: drop-shadow(0 0 15px rgba(255,0,0,0.8));
+  filter: drop-shadow(0 0 15px rgba(0, 150, 255, 0.8));
 }
 .popup-box h2 {
-  color: #000080; font-size: 22px; letter-spacing: 2px;
-  text-shadow: 0 0 15px rgba(255,0,0,0.8);
+  color: #0080ff; font-size: 22px; letter-spacing: 2px;
+  text-shadow: 0 0 15px rgba(0, 120, 255, 0.8);
   margin-bottom: 8px; font-weight: 800;
   text-transform: uppercase;
 }
 .popup-box p {
-  color: #ff8888; font-size: 13px; margin-bottom: 20px;
+  color: #88ddff; font-size: 13px; margin-bottom: 20px;
 }
 
 .popup-btn {
@@ -225,19 +226,19 @@ body::after {
 
 .popup-btn.later {
   background: transparent;
-  color: #ff5555;
-  border: 1px solid #6a0000;
+  color: #44bbff;
+  border: 1px solid #003060;
 }
-.popup-btn.later:hover { background: rgba(255,0,0,0.1); }
+.popup-btn.later:hover { background: rgba(0, 100, 255, 0.1); }
 
 .popup-hint {
-  margin-top: 15px; font-size: 10px; color: #662222;
+  margin-top: 15px; font-size: 10px; color: #336688;
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════ MONEY RAIN CANVAS ═══════════ -->
+<!-- ═══════════ CODE RAIN CANVAS ═══════════ -->
 <canvas id="rain"></canvas>
 
 <!-- ═══════════ JOIN CHANNEL POPUP ═══════════ -->
@@ -285,19 +286,16 @@ body::after {
 <script>
 /* ═══════════════════════════════════════════════════════════
    🔧 CONFIG — YAHAN APNA WHATSAPP CHANNEL LINK LAGAO 🔧
-   Apna channel ka link neeche quotes (" ") ke andar paste karo.
-   Example: const CHANNEL_LINK = "https://whatsapp.com/channel/0029VaXXXXXX";
    ═══════════════════════════════════════════════════════════ */
-const CHANNEL_LINK = "https://whatsapp.com/channel/0029Vb8PrQXL7UVUxF1seS15";   // ← APNA LINK YAHAN PASTE KARO
+const CHANNEL_LINK = "https://whatsapp.com/channel/0029Vb8PrQXL7UVUxF1seS15";
 
-/* ── API (same API jo upar wali site use karti hai) ── */
+/* ── API ── */
 const API = "https://famofc.site/api/database.php";
 
 let searchType = 'phone';
 
 /* ═══════════ JOIN CHANNEL POPUP LOGIC ═══════════ */
 function showPopup() {
-  // Agar user pehle hi join/close kar chuka hai to popup dobara nahi dikhega
   if (localStorage.getItem('kk_channel_popup_done')) return;
   document.getElementById('popup').classList.add('show');
 }
@@ -307,7 +305,7 @@ function joinChannel() {
   document.getElementById('popup').classList.remove('show');
 
   if (CHANNEL_LINK) {
-    window.open(CHANNEL_LINK, '_blank');   // WhatsApp channel naye tab mein khulega
+    window.open(CHANNEL_LINK, '_blank');
   } else {
     alert('⚠ Channel link abhi set nahi hua.\n\nCode ke top par CHANNEL_LINK mein apna WhatsApp channel link paste karo.');
   }
@@ -347,7 +345,7 @@ async function search() {
     data.data.records.forEach((r, i) => {
       html += `
       <div class="item">
-        <div style="font-size:10px; color:#ff6666; letter-spacing:2px; margin-bottom:4px;">▓ RECORD #${i + 1} — VERIFIED ▓</div>
+        <div style="font-size:10px; color:#44ccff; letter-spacing:2px; margin-bottom:4px;">▓ RECORD #${i + 1} — VERIFIED ▓</div>
         <div class="label">👤 Name</div>
         <div class="value highlight">${escapeHtml(r.full_name || 'N/A')}</div>
         <div class="label">📱 Phone</div>
@@ -375,7 +373,7 @@ function escapeHtml(str) {
   }[c]));
 }
 
-/* ═══════════ FALLING MONEY RAIN ═══════════ */
+/* ═══════════ FALLING CODE RAIN ═══════════ */
 const canvas = document.getElementById('rain');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
@@ -407,11 +405,11 @@ function drawRain() {
       d.x = Math.random() * canvas.width;
     }
 
-    // Red glow effect
-    ctx.shadowColor = '#000080';
-    ctx.shadowBlur = 15;
+    // Blue glow effect — theme ke mutabiq
+    ctx.shadowColor = '#0080ff';
+    ctx.shadowBlur = 18;
     ctx.font = `bold ${d.size}px monospace`;
-    ctx.fillStyle = `rgba(255, 60, 60, ${d.opacity})`;
+    ctx.fillStyle = `rgba(0, 180, 255, ${d.opacity})`;
     ctx.fillText(d.symbol, d.x, d.y);
     ctx.shadowBlur = 0;
   });
@@ -430,7 +428,6 @@ document.getElementById('input').addEventListener('keydown', e => {
   if (e.key === 'Enter') search();
 });
 
-// Load par popup dikhao
 window.addEventListener('load', showPopup);
 </script>
 </body>
