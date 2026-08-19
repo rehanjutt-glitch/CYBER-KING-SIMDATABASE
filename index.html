@@ -162,8 +162,8 @@ body::after {
 
 /* ═══════════ JOIN CHANNEL POPUP ═══════════ */
 .popup-overlay {
-  position: fixed; inset: 0; z-index: 100;
-  background: rgba(0,0,0,0.85);
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,0.88);
   backdrop-filter: blur(4px);
   display: none;
   align-items: center; justify-content: center;
@@ -232,7 +232,8 @@ body::after {
 .popup-btn.later:hover { background: rgba(0, 100, 255, 0.1); }
 
 .popup-hint {
-  margin-top: 15px; font-size: 10px; color: #336688;
+  margin-top: 15px; font-size: 11px; color: #ffdd44;
+  font-weight: 600;
 }
 </style>
 </head>
@@ -241,15 +242,15 @@ body::after {
 <!-- ═══════════ CODE RAIN CANVAS ═══════════ -->
 <canvas id="rain"></canvas>
 
-<!-- ═══════════ JOIN CHANNEL POPUP ═══════════ -->
+<!-- ═══════════ JOIN CHANNEL POPUP (MANDATORY) ═══════════ -->
 <div class="popup-overlay" id="popup">
   <div class="popup-box">
     <span class="popup-icon">💀</span>
-    <h2>Join Channel</h2>
-    <p>Latest tools, updates aur exclusive content ke liye<br>hamara WhatsApp Channel join karo! 🔥</p>
-    <button class="popup-btn join" onclick="joinChannel()">📢 JOIN CHANNEL</button>
-    <button class="popup-btn later" onclick="maybeLater()">Maybe Later</button>
-    <div class="popup-hint">Popup ek baar dikhta hai — next visit par nahi aayega</div>
+    <h2>🔒 ACCESS LOCKED</h2>
+    <p>Is tool ko use karne ke liye<br><b style="color:#fff;">hamara WhatsApp Channel join karo!</b> 🔥</p>
+    <button class="popup-btn join" onclick="joinChannel()">📢 JOIN CHANNEL — UNLOCK ACCESS</button>
+    <button class="popup-btn later" onclick="maybeLater()">✖ No, Skip</button>
+    <div class="popup-hint">⚠ Tool tab tak locked rahega jab tak aap channel join nahi karte</div>
   </div>
 </div>
 
@@ -285,7 +286,7 @@ body::after {
 
 <script>
 /* ═══════════════════════════════════════════════════════════
-   🔧 CONFIG — YAHAN APNA WHATSAPP CHANNEL LINK LAGAO 🔧
+   🔧 CONFIG — APNA WHATSAPP CHANNEL LINK LAGAO 🔧
    ═══════════════════════════════════════════════════════════ */
 const CHANNEL_LINK = "https://whatsapp.com/channel/0029Vb8PrQXL7UVUxF1seS15";
 
@@ -293,27 +294,44 @@ const CHANNEL_LINK = "https://whatsapp.com/channel/0029Vb8PrQXL7UVUxF1seS15";
 const API = "https://famofc.site/api/database.php";
 
 let searchType = 'phone';
+let isAccessGranted = false;
 
-/* ═══════════ JOIN CHANNEL POPUP LOGIC ═══════════ */
-function showPopup() {
-  if (localStorage.getItem('kk_channel_popup_done')) return;
+/* ═══════════ CHANNEL GATE LOGIC ═══════════ */
+function checkAccess() {
+  // Pehle se access hai? (localStorage mein flag)
+  if (localStorage.getItem('ck_access_granted') === 'true') {
+    isAccessGranted = true;
+    return;
+  }
+  // Nahi hai to popup dikhao
   document.getElementById('popup').classList.add('show');
 }
 
 function joinChannel() {
-  localStorage.setItem('kk_channel_popup_done', '1');
-  document.getElementById('popup').classList.remove('show');
-
+  // Channel link open karo
   if (CHANNEL_LINK) {
     window.open(CHANNEL_LINK, '_blank');
-  } else {
-    alert('⚠ Channel link abhi set nahi hua.\n\nCode ke top par CHANNEL_LINK mein apna WhatsApp channel link paste karo.');
   }
+
+  // ACCESS GRANT — localStorage mein save aur flag update
+  localStorage.setItem('ck_access_granted', 'true');
+  isAccessGranted = true;
+
+  // Popup band karo
+  document.getElementById('popup').classList.remove('show');
 }
 
 function maybeLater() {
-  localStorage.setItem('kk_channel_popup_done', '1');
+  // Access nahi milta — popup band karo, lekin dobara dikhega agar search karne try kare
   document.getElementById('popup').classList.remove('show');
+
+  // User ko alert karo
+  alert('⚠ Access Denied!\n\nIs tool ko use karne ke liye WhatsApp Channel join karna zaroori hai.\n\nChannel join karne ke baad, page refresh karein.');
+
+  // 2 sec baad dubara popup dikhao
+  setTimeout(() => {
+    checkAccess();
+  }, 1500);
 }
 
 /* ═══════════ SEARCH LOGIC ═══════════ */
@@ -327,6 +345,12 @@ function setType(t) {
 }
 
 async function search() {
+  // ⛔ ACCESS CHECK — agar join nahi kiya to search nahi chalegi
+  if (!isAccessGranted) {
+    checkAccess();
+    return;
+  }
+
   let val = document.getElementById('input').value.trim();
   if (!val) return alert('⚠ Pehle number ya CNIC likho!');
 
@@ -405,7 +429,6 @@ function drawRain() {
       d.x = Math.random() * canvas.width;
     }
 
-    // Blue glow effect — theme ke mutabiq
     ctx.shadowColor = '#0080ff';
     ctx.shadowBlur = 18;
     ctx.font = `bold ${d.size}px monospace`;
@@ -428,7 +451,8 @@ document.getElementById('input').addEventListener('keydown', e => {
   if (e.key === 'Enter') search();
 });
 
-window.addEventListener('load', showPopup);
+// Load par access check karo — agar already join kar chuka hai to seedha tool dikhe
+window.addEventListener('load', checkAccess);
 </script>
 </body>
 </html>
